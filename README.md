@@ -1,10 +1,11 @@
 ## fake-xemex-csmb
-Modbus Client that can simulate a Xemex CSMB by simulating a ModBus-RTU Server - based on M5Stack ATOM Lite ESP32
 
-## Goal
+A Modbus client that emulates a Xemex CSMB by simulating a Modbus-RTU server, designed for the M5Stack ATOM Lite ESP32.
 
-This project allows you to set the charge speed of a Shell Recharge Advanced 3.0 charging point by emulating a Xemex CSMB.
+## Project Purpose
 
-## How is this working ?
+This project enables you to control the charging speed of a Shell Recharge Advanced 3.0 charging station by emulating a Xemex CSMB device.
 
-ESPhome device acting as a Xemex CSMB by simulating a Modbus RTU Slave/Client/Server that can be polled by a master (e.g. a EV Wallbox like Shell Recharge Advanced 3.0) and delivers IREGs and HREGs which can be controlled arbitrarily. I'm doing this using [Home Assistant](https://www.home-assistant.io/) and [EVCC](https://evcc.io/en/). [EVCC](https://evcc.io/en/) has been installed as add-on on [Home Assistant](https://www.home-assistant.io/).
+## How It Works
+
+An ESPHome device acts as a Xemex CSMB by simulating a Modbus RTU slave/server. It can be polled by a master device (such as a Shell Recharge Advanced 3.0 EV wallbox) and provides IREGs and HREGs that can be set as needed. This setup is managed using [Home Assistant](https://www.home-assistant.io/) and [EVCC](https://evcc.io/en/), with EVCC installed as an add-on in Home Assistant.
