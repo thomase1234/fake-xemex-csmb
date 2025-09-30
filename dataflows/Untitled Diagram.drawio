@@ -25,8 +25,8 @@
         <mxCell id="kDmJCXZ-T7Dpuqi5_Cnn-6" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/icon-cache1/Green_world-2013/Green_World-15-1104.svg" parent="1" vertex="1">
           <mxGeometry x="159" y="730" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="Q0iOnT2UKNtf_5qlqNYP-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="425" y="140" width="275" height="200" as="geometry" />
+        <mxCell id="Q0iOnT2UKNtf_5qlqNYP-1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="425" y="140" width="275" height="410" as="geometry" />
         </mxCell>
         <mxCell id="Q0iOnT2UKNtf_5qlqNYP-2" value="Home Assistant" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="425" y="140" width="60" height="30" as="geometry" />
@@ -51,6 +51,18 @@
             <mxPoint x="290" y="180" as="sourcePoint" />
             <mxPoint x="410" y="180" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="uFsL1GRC9FGEtMtAAvlv-3" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://upload.wikimedia.org/wikipedia/en/4/49/Home_Assistant_logo_%282023%29.svg;" vertex="1" parent="1">
+          <mxGeometry x="660" y="150" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uFsL1GRC9FGEtMtAAvlv-4" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="380" width="210" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uFsL1GRC9FGEtMtAAvlv-5" value="EVCC" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="480" y="380" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uFsL1GRC9FGEtMtAAvlv-6" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://upload.wikimedia.org/wikipedia/commons/e/e9/Evcc_Logo.svg;" vertex="1" parent="1">
+          <mxGeometry x="587.71" y="385" width="72.29" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
