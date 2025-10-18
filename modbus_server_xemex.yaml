@@ -1,0 +1,31 @@
+# this file can be placed in the /config/package directory for your Home Assistant installation
+
+template:
+  - sensor:
+      - name: "ct1current"
+        unique_id: 86453e9c-26df-4721-9e03-00e07816a57b
+        unit_of_measurement: "A"
+        state: >
+          {% set difference = (states('input_number.evcc_desired_current') | float - states('sensor.shelly3em_laadpaal_current') | float(default=32) ) %}
+          {% if difference < -8 %}
+            {% set difference = -4 %}
+          {% elif difference < 0 %}
+            {% set difference = difference / 2 %}
+          {% endif %}
+          {{ ( states('input_number.main_maximal_current') | float - difference ) | round(3) }}
+        device_class: "current"
+        icon: mdi:current-ac
+      - name: "ct2current"
+        unique_id: 9529e120-4cd0-4d46-a192-d4c0b67fff55
+        unit_of_measurement: "A"
+        state: >
+          {{ 0.23756103 }}
+        device_class: "current"
+        icon: mdi:current-ac
+      - name: "ct3current"
+        unique_id: b6ea2683-11be-42fd-b568-79ab0ee04bca
+        unit_of_measurement: "A"
+        state: >
+          {{ 0.23756103 }}
+        device_class: "current"
+        icon: mdi:current-ac

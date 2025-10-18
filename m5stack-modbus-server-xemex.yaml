@@ -1,0 +1,221 @@
+substitutions:
+  device_name: "m5stack-modbus-server-xemex"
+  friendly_name: "Modbus Server Xemex"
+  device_comment: "Modbus Client that can simulate modbus of Xemex CSMB - based on M5Stack lite"
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  comment: $device_comment
+  name_add_mac_suffix: false
+  min_version: 2025.5.0
+
+
+esp32:
+  board: m5stack-atom
+  cpu_frequency: 240MHz
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  domain : !secret domain
+
+  ap:
+    ssid: ${device_name} AP
+    password: !secret hotspot_pass
+
+captive_portal:
+
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+    ssid:
+      name: "Wi-Fi SSID"
+    bssid:
+      name: "Wi-Fi BSSID"
+  - platform: version
+    name: "ESPHome Version"
+    hide_timestamp: true
+    
+
+# see: https://esphome.io/components/time.html
+time:
+  - platform: homeassistant
+
+
+
+## BEGIN for Modbus server
+
+
+uart:
+  - id: uart_modbus_server
+    tx_pin: 26
+    rx_pin: 32
+    baud_rate: 9600   # default for Xemex CMSB
+    stop_bits: 1 #default to 8E1
+    data_bits: 8 #default to 8E1
+    parity: EVEN #default to 8E1
+#    debug:
+#      direction: BOTH
+
+modbus:
+  - uart_id: uart_modbus_server
+    id: modbus_server
+    role: server
+
+modbus_controller:
+  - modbus_id: modbus_server
+    address: 0x1
+    server_registers:
+      - address: 0x4000  # serial number
+        value_type: U_DWORD
+        read_lambda: |-
+          return 0x1;
+      - address: 0x4002  # device code
+        value_type: U_WORD
+        read_lambda: |-
+          return 20802;
+      - address: 0x4003  # device address
+        value_type: U_WORD
+        read_lambda: |-
+          return 20802;
+      - address: 0x4004  # RS485 Baudrate Low
+        value_type: U_WORD
+        read_lambda: |-
+          return 9600;
+      - address: 0x4005  # Protocol Version
+        value_type: FP32
+        read_lambda: |-
+          return 0x3f800000;
+      - address: 0x4007  # Software Version
+        value_type: FP32
+        read_lambda: |-
+          return 0x40000000;
+      - address: 0x4009  # Hardware Version
+        value_type: FP32
+        read_lambda: |-
+          return 0x00000000;
+      - address: 0x400B  # Meter Amps
+        value_type: U_WORD
+        read_lambda: |-
+          return 80;
+      - address: 0x400C  # CT Ratio
+        value_type: U_WORD
+        read_lambda: |-
+          return 2000;
+      - address: 0x400D  # RS485 Line Settings
+        value_type: U_WORD
+        read_lambda: |-
+          return 36;
+      - address: 0x400E  # RS485 Line Termination
+        value_type: U_WORD
+        read_lambda: |-
+          return 1;
+      - address: 0x400F  # RS485 Baudrate High
+        value_type: U_WORD
+        read_lambda: |-
+          return 0;
+      - address: 0x500C  # Current CT1
+        value_type: FP32
+        read_lambda: |-
+          if (!isnan(id(ct1current).state)) {
+            return id(ct1current).state;
+            } else {
+            ESP_LOGW("main", "no HA state for sensor.ct1current : returning 40");
+            return 40;
+            }
+      - address: 0x500E  # Current CT2
+        value_type: FP32
+        read_lambda: |-
+          if (!isnan(id(ct2current).state)) {
+            return id(ct2current).state;
+            } else {
+            ESP_LOGW("main", "no HA state for sensor.ct2current : returning 0.23");
+            return 0.23;
+            }
+      - address: 0x5010  # Current CT3
+        value_type: FP32
+        read_lambda: |-
+          if (!isnan(id(ct3current).state)) {
+            return id(ct3current).state;
+            } else {
+            ESP_LOGW("main", "no HA state for sensor.ct3current : returning 0.23");
+            return 0.23;
+            }
+
+## END for Modbus server
+
+
+## START read HA sensor data
+
+sensor:
+  # This is to get the charging current from HA
+  - platform: homeassistant
+    name: ct1current
+    entity_id: sensor.ct1current
+    id: ct1current
+    unit_of_measurement: A
+    accuracy_decimals: 3
+
+  - platform: homeassistant
+    name: ct2current
+    entity_id: sensor.ct2current
+    id: ct2current
+    unit_of_measurement: A
+    accuracy_decimals: 3
+
+  - platform: homeassistant
+    name: ct3current
+    entity_id: sensor.ct3current
+    id: ct3current
+    unit_of_measurement: A
+    accuracy_decimals: 3
+
+  - platform: uptime
+    type: seconds
+    name: Uptime Sensor
+
+
+## END read HA sensor data
+
+## START button turns on LED
+## I created this just to test if the device is on and firmware is loaded. The button toggles the led. 
+light:
+  - platform: esp32_rmt_led_strip
+    id: led
+    name: "Atom Led"
+    disabled_by_default: false
+    entity_category: config
+    pin: GPIO27
+    default_transition_length: 0s
+    chipset: SK6812
+    num_leds: 1
+    rgb_order: grb
+
+
+binary_sensor:
+  - platform: gpio
+    id: button
+    name: "Atom Button"
+    pin:
+      number: 39  # Replace with the correct GPIO pin
+      inverted: true
+    on_press:
+      then:
+        - logger.log: "Button pressed!"
+        - light.toggle: led
+## END button turns on LED
